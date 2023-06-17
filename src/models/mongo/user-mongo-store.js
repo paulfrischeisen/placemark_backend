@@ -14,16 +14,16 @@ export const userMongoStore = {
     return null;
   },
 
+  async getUserByEmail(email) {
+    const user = await User.findOne({ email: email }).lean();
+    return user;
+  },
+
   async addUser(user) {
     const newUser = new User(user);
     const userObj = await newUser.save();
     const u = await this.getUserById(userObj._id);
     return u;
-  },
-
-  async getUserByEmail(email) {
-    const user = await User.findOne({ email: email }).lean();
-    return user;
   },
 
   async deleteUserById(id) {
@@ -34,7 +34,7 @@ export const userMongoStore = {
     }
   },
 
-  async deleteAll() {
+  async deleteAllUsers() {
     await User.deleteMany({});
   },
 };
