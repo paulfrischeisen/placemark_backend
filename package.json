@@ -24,6 +24,8 @@
     "@hapi/inert": "^7.1.0",
     "@hapi/vision": "^7.0.2",
     "dotenv": "^16.3.0",
-    "handlebars": "^4.7.7"
+    "handlebars": "^4.7.7",
+    "mais-mongoose-seeder": "^1.0.7",
+    "mongoose": "^7.3.0"
   }
 }
