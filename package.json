@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "lint": "./node_modules/.bin/eslint . --ext .js"
+    "lint": "./node_modules/.bin/eslint . --ext .js",
+    "test": "mocha --ui tdd test/**.js -exit"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +24,11 @@
     "@hapi/hapi": "^21.3.2",
     "@hapi/inert": "^7.1.0",
     "@hapi/vision": "^7.0.2",
+    "chai": "^4.3.7",
     "dotenv": "^16.3.0",
-    "handlebars": "^4.7.7"
+    "handlebars": "^4.7.7",
+    "mais-mongoose-seeder": "^1.0.7",
+    "mocha": "^10.2.0",
+    "mongoose": "^7.3.0"
   }
 }
