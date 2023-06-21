@@ -24,7 +24,7 @@ export const seedData = {
   placemarks: {
     _model: "Placemark",
     poi1: {
-      name: "POI 1",
+      name: "Placemark1",
       description: "description of POI 1",
       lat: "49.01183336119857",
       lng: "11.953814284654438",

@@ -5,10 +5,15 @@ import Vision from "@hapi/vision";
 import dotenv from "dotenv";
 import path from "path";
 import Handlebars from "handlebars";
+import jwt from "hapi-auth-jwt2";
+import HapiSwagger from "hapi-swagger";
+import Joi from "joi";
 
 import { fileURLToPath } from "url";
 import { webRoutes } from "./web-routes.js";
 import { apiRoutes } from "./api-routes.js";
+import { validate } from "./api/jwt-utils.js";
+import { db } from "./models/db.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,6 +22,22 @@ const result = dotenv.config();
 if (result.error) {
   console.log(result.error.message);
 }
+
+const swaggerOptions = {
+  info: {
+    title: "Placemark API",
+    version: "0.1",
+  },
+  securityDefinitions: {
+    jwt: {
+      type: "apiKey",
+      name: "Authorization",
+      in: "header",
+    },
+  },
+  security: [{ jwt: [] }],
+};
+
 async function init() {
   const server = Hapi.server({
     port: process.env.PORT || 4000,
@@ -25,6 +46,18 @@ async function init() {
 
   await server.register(Inert);
   await server.register(Vision);
+  await server.register(jwt);
+
+  await server.register([
+    Inert,
+    Vision,
+    {
+      plugin: HapiSwagger,
+      options: swaggerOptions,
+    },
+  ]);
+
+  server.validator(Joi);
 
   server.views({
     engines: {
@@ -35,6 +68,14 @@ async function init() {
     layout: false,
     isCached: false,
   });
+
+  server.auth.strategy("jwt", "jwt", {
+    key: process.env.cookie_password,
+    validate: validate,
+    verifyOptions: { algorithms: ["HS256"] },
+  });
+
+  db.init("mongo");
 
   server.route(webRoutes);
   server.route(apiRoutes);
