@@ -37,4 +37,12 @@ export const userMongoStore = {
   async deleteAllUsers() {
     await User.deleteMany({});
   },
+
+  async promoteUserToAdmin(id) {
+    const userToPromote = await User.findOne({ _id: id });
+    userToPromote.role = "admin";
+    await userToPromote.save();
+    const tmp = this.getUserById(id);
+    return tmp;
+  },
 };

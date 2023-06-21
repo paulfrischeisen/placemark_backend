@@ -35,3 +35,95 @@ export const JwtAuth = Joi.object()
     token: Joi.string().example("eyJhbGciOiJND.g5YmJisIjoiaGYwNTNjAOhE.gCWGmY5-YigQw0DCBo").required(),
   })
   .label("JwtAuth");
+
+export const POISpec = Joi.object()
+  .keys({
+    name: Joi.string().required().example("Frankenjura"),
+    description: Joi.string().example("Example description of POI").optional().allow(""),
+    category: Joi.string().example("Bouldering").optional().allow(""),
+    location: Joi.object().keys({
+      type: Joi.string().valid("Point").example("Point"),
+      coordinates: Joi.array().items(Joi.number()).required().example([49.03222233840492, 12.1288167694678]),
+    }),
+    photos: Joi.array().items(Joi.string()).example(["https://www.pictures.com/example1.png", "https://www.pictures.com/example2.png"]).optional(),
+    stats: Joi.object().keys({
+      avgRating: Joi.number().example(3).optional().allow(null),
+      countRatings: Joi.number().example(13).optional().allow(null),
+    }),
+    comments: Joi.any().optional(),
+    _id: IdSpec,
+    __v: Joi.number(),
+    createdByUser: Joi.string().example("Contributor1").optional(),
+  })
+  .label("POIInformation");
+
+export const POIArray = Joi.array().items(POISpec).label("POIArray");
+
+export const POICreation = Joi.object()
+  .keys({
+    name: Joi.string().example("Test POI").required(),
+    category: Joi.string().example("Lead Climbing").required(),
+    description: Joi.string().example("description of a test POI").required(),
+    location: {
+      type: Joi.string().valid("Point").example("Point"),
+      coordinates: Joi.array().items(Joi.number()).required().example([49.03222233840492, 12.1288167694678]),
+    },
+    createdByUser: Joi.string().example("Contributor1").required(),
+  })
+  .label("POICreation");
+
+export const addRating = Joi.object()
+  .keys({
+    id: IdSpec.required().example("1234").required(),
+    rating: Joi.number().example(3).required(),
+  })
+  .label("addRating");
+
+export const addComment = Joi.object()
+  .keys({
+    id: IdSpec.required().example("1234").required(),
+    username: Joi.string().example("Contributor1").required(),
+    comment: Joi.string().example("test comment").required(),
+  })
+  .label("addComment");
+
+export const CategorySpec = Joi.object()
+  .keys({
+    categories: Joi.array()
+      .items(Joi.string())
+      .example(["Bouldering", "Lead Climbing", "Top rope", "All Climbing Categories", "Speed"])
+      .description("Array of all categories")
+      .optional(),
+    categoryAmount: Joi.array().items(
+      Joi.object().keys({
+        _id: Joi.string().example("Bouldering").description("The category name").optional(),
+        count: Joi.number().example(2).description("Amount of POIs in this category").optional(),
+      })
+    ),
+  })
+  .label("CategoryAmount");
+
+export const UserCreationStats = Joi.array()
+  .items(
+    Joi.object().keys({
+      _id: Joi.string().example("Bouldering").description("The category name").optional().allow(null),
+      count: Joi.number().example(2).description("Amount of POIs in this category").optional(),
+    })
+  )
+  .label("UserCreationStats");
+
+export const endOfCreation = Joi.object()
+  .keys({
+    name: Joi.string().example("Test POI").required(),
+    description: Joi.string().example("description of a test POI").required(),
+    location: {
+      type: Joi.string().valid("Point").example("Point"),
+      coordinates: Joi.array().items(Joi.number()).required().example([49.03222233840492, 12.1288167694678]),
+    },
+    photos: Joi.array().items().optional().example(["https://lh3.googleusercontent.com/p/AF1QipPCicfh4DuejvfNli7qq6PSo9WUemCrpGA3-wgz=s680-w680-h510"]),
+    _id: IdSpec,
+    __v: Joi.number(),
+    comments: Joi.array().items(0).optional().example([]),
+    createdByUser: Joi.string().example("Contributor1").required(),
+  })
+  .label("endOfCreation");
