@@ -1,6 +1,5 @@
 import { userApi } from "./api/users-api.js";
 import { placemarksApi } from "./api/placemark-api.js";
-import { apiReachableTest } from "./api/api-reachable-test.js";
 
 export const apiRoutes = [
   { method: "GET", path: "/api/users", config: userApi.find },
@@ -13,6 +12,12 @@ export const apiRoutes = [
   { method: "GET", path: "/api/placemarks/{id}", config: placemarksApi.findByContributor },
   { method: "POST", path: "/api/placemarks", config: placemarksApi.createPlacemark },
   { method: "DELETE", path: "/api/placemarks", config: placemarksApi.deleteAll },
-
-  { method: "GET", path: "/api/apitest", config: apiReachableTest.apiTest },
+  { method: "POST", path: "/api/placemarks", config: placemarksApi.addRating },
+  { method: "POST", path: "/api/placemarks", config: placemarksApi.addComment },
+  { method: "POST", path: "/api/placemarks", config: placemarksApi.addImage },
+  { method: "GET", path: "/api/placemarks", config: placemarksApi.getRatingStats },
+  { method: "GET", path: "/api/placemarks", config: placemarksApi.getPlacemarkUserStats },
+  { method: "GET", path: "/api/placemarks", config: placemarksApi.getPlacemarkCategoryStats },
+  { method: "DELETE", path: "/api/placemarks/{id}", config: placemarksApi.deletePlacemark },
+  { method: "GET", path: "/api/placemarks/{category}", config: placemarksApi.findByCategory },
 ];

@@ -111,19 +111,3 @@ export const UserCreationStats = Joi.array()
     })
   )
   .label("UserCreationStats");
-
-export const endOfCreation = Joi.object()
-  .keys({
-    name: Joi.string().example("Test POI").required(),
-    description: Joi.string().example("description of a test POI").required(),
-    location: {
-      type: Joi.string().valid("Point").example("Point"),
-      coordinates: Joi.array().items(Joi.number()).required().example([49.03222233840492, 12.1288167694678]),
-    },
-    photos: Joi.array().items().optional().example(["https://lh3.googleusercontent.com/p/AF1QipPCicfh4DuejvfNli7qq6PSo9WUemCrpGA3-wgz=s680-w680-h510"]),
-    _id: IdSpec,
-    __v: Joi.number(),
-    comments: Joi.array().items(0).optional().example([]),
-    createdByUser: Joi.string().example("Contributor1").required(),
-  })
-  .label("endOfCreation");

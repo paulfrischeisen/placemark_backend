@@ -1,16 +1,15 @@
 import Hapi from "@hapi/hapi";
 import Inert from "@hapi/inert";
 import Vision from "@hapi/vision";
+import Cookie from "@hapi/cookie";
 
 import dotenv from "dotenv";
 import path from "path";
-import Handlebars from "handlebars";
 import jwt from "hapi-auth-jwt2";
 import HapiSwagger from "hapi-swagger";
 import Joi from "joi";
 
 import { fileURLToPath } from "url";
-import { webRoutes } from "./web-routes.js";
 import { apiRoutes } from "./api-routes.js";
 import { validate } from "./api/jwt-utils.js";
 import { db } from "./models/db.js";
@@ -59,16 +58,6 @@ async function init() {
 
   server.validator(Joi);
 
-  server.views({
-    engines: {
-      hbs: Handlebars,
-    },
-    relativeTo: __dirname,
-    path: "./views",
-    layout: false,
-    isCached: false,
-  });
-
   server.auth.strategy("jwt", "jwt", {
     key: process.env.cookie_password,
     validate: validate,
@@ -77,7 +66,6 @@ async function init() {
 
   db.init("mongo");
 
-  server.route(webRoutes);
   server.route(apiRoutes);
 
   await server.start();
