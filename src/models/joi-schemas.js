@@ -38,14 +38,13 @@ export const JwtAuth = Joi.object()
 
 export const POISpec = Joi.object()
   .keys({
-    name: Joi.string().required().example("Frankenjura"),
-    description: Joi.string().example("Example description of POI").optional().allow(""),
-    category: Joi.string().example("Bouldering").optional().allow(""),
-    location: Joi.object().keys({
-      type: Joi.string().valid("Point").example("Point"),
-      coordinates: Joi.array().items(Joi.number()).required().example([49.03222233840492, 12.1288167694678]),
-    }),
-    photos: Joi.array().items(Joi.string()).example(["https://www.pictures.com/example1.png", "https://www.pictures.com/example2.png"]).optional(),
+    name: Joi.string().example("Frankenjura").required(),
+    lat: Joi.number().example(51.12314).required(),
+    lng: Joi.number().example(12.0213123).required(),
+    description: Joi.string().example("description of a test POI").required(),
+    category: Joi.string().example("Lead Climbing").required(),
+    /*
+      photos: Joi.array().items(Joi.string()).example(["https://www.pictures.com/example1.png", "https://www.pictures.com/example2.png"]).optional(),
     stats: Joi.object().keys({
       avgRating: Joi.number().example(3).optional().allow(null),
       countRatings: Joi.number().example(13).optional().allow(null),
@@ -54,6 +53,8 @@ export const POISpec = Joi.object()
     _id: IdSpec,
     __v: Joi.number(),
     createdByUser: Joi.string().example("Contributor1").optional(),
+
+   */
   })
   .label("POIInformation");
 
@@ -62,13 +63,10 @@ export const POIArray = Joi.array().items(POISpec).label("POIArray");
 export const POICreation = Joi.object()
   .keys({
     name: Joi.string().example("Test POI").required(),
-    category: Joi.string().example("Lead Climbing").required(),
+    lat: Joi.number().example(51.12314).required(),
+    lng: Joi.number().example(12.0213123).required(),
     description: Joi.string().example("description of a test POI").required(),
-    location: {
-      type: Joi.string().valid("Point").example("Point"),
-      coordinates: Joi.array().items(Joi.number()).required().example([49.03222233840492, 12.1288167694678]),
-    },
-    createdByUser: Joi.string().example("Contributor1").required(),
+    category: Joi.string().example("Lead Climbing").required(),
   })
   .label("POICreation");
 
@@ -111,3 +109,16 @@ export const UserCreationStats = Joi.array()
     })
   )
   .label("UserCreationStats");
+
+export const POIUpdateSpec = Joi.object()
+  .keys({
+    name: Joi.string().example("Frankenjura").required(),
+    category: Joi.string().example("Bouldering"),
+    description: Joi.string().example("a bouldering area near to nuremberh"),
+    location: Joi.object().keys({
+      type: Joi.string().valid("Point").example("Point"),
+      coordinates: Joi.array().items(Joi.number()).required().example([49.03222233840492, 12.1288167694678]),
+    }),
+    photos: Joi.array().items(Joi.string().example("https://www.pictures.com/example1.png")),
+  })
+  .label("PlacemarkUpdate");

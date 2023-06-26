@@ -1,7 +1,7 @@
 import Boom from "@hapi/boom";
 import Joi from "joi";
 import { db } from "../models/db.js";
-import { CategorySpec, addComment, addRating, POIArray, POICreation, POISpec, UserCreationStats, IdSpec } from "../models/joi-schemas.js";
+import { CategorySpec, addComment, addRating, POIArray, POICreation, POISpec, UserCreationStats, IdSpec, POIUpdateSpec } from "../models/joi-schemas.js";
 import { validationError } from "./logger.js";
 import { imageStore } from "../models/image-store.js";
 
@@ -50,6 +50,25 @@ export const placemarksApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
+      console.log("In the backend - createPlacemark");
+      console.log(request.payload);
+      console.log(request.auth.credentials);
+      try {
+        const recievedPlacemark = request.payload;
+        const user = request.auth.credentials;
+        recievedPlacemark.user = user;
+
+        const placemark = await db.placemarkStore.addPlacemark(recievedPlacemark);
+        if (placemark) {
+          return h.response(placemark).code(201);
+        }
+        return Boom.badImplementation("An Error occured creating a placemark");
+      } catch (error) {
+        console.log(error);
+        return Boom.serverUnavailable("Database Error");
+      }
+    },
+    /*
       const existingPlacemark = await db.placemarkStore.getPlacemarkByName(request.payload.name);
       if (existingPlacemark) {
         return Boom.badRequest("This Placemark already exists");
@@ -60,6 +79,8 @@ export const placemarksApi = {
       }
       return h.response(placemark).code(201);
     },
+
+     */
     tags: ["api"],
     description: "Create a Placemark",
     notes: "Returns details of a single placemark",
@@ -250,5 +271,27 @@ export const placemarksApi = {
         return Boom.serverUnavailable(err);
       }
     },
+  },
+
+  updatePlacemark: {
+    auth: {
+      strategy: "jwt",
+    },
+    handler: async function (request, h) {
+      try {
+        const response = await db.placemarkStore.updatePlacemark(request.params.id, request.payload);
+        if (!response) {
+          return Boom.notFound("ID not available");
+        }
+        return h.response(response).code(200);
+      } catch (err) {
+        return Boom.serverUnavailable("Database Error");
+      }
+    },
+    tags: ["api"],
+    description: "Update a placemark",
+    notes: "Updates a Placemark",
+    validate: { params: { id: IdSpec }, payload: POIUpdateSpec, failAction: validationError },
+    response: { schema: POISpec, failAction: validationError },
   },
 };

@@ -12,6 +12,8 @@ export const apiRoutes = [
   { method: "GET", path: "/api/placemarks/{id}", config: placemarksApi.findByContributor },
   { method: "POST", path: "/api/placemarks", config: placemarksApi.createPlacemark },
   { method: "DELETE", path: "/api/placemarks", config: placemarksApi.deleteAll },
+  { method: "PUT", path: "/api/placemarks/{id}", config: placemarksApi.updatePlacemark },
+  /*
   { method: "POST", path: "/api/placemarks", config: placemarksApi.addRating },
   { method: "POST", path: "/api/placemarks", config: placemarksApi.addComment },
   { method: "POST", path: "/api/placemarks", config: placemarksApi.addImage },
@@ -20,4 +22,6 @@ export const apiRoutes = [
   { method: "GET", path: "/api/placemarks", config: placemarksApi.getPlacemarkCategoryStats },
   { method: "DELETE", path: "/api/placemarks/{id}", config: placemarksApi.deletePlacemark },
   { method: "GET", path: "/api/placemarks/{category}", config: placemarksApi.findByCategory },
+
+     */
 ];

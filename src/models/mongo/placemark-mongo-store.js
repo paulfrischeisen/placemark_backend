@@ -6,9 +6,9 @@ export const placemarkMongoStore = {
     return placemarks;
   },
 
-  async getPlacemarkById(id) {
+  async getPlacemarkById(id, user) {
     if (id) {
-      const placemark = await Placemark.findOne({ _id: id }).lean();
+      const placemark = await Placemark.findOne({ _id: id, user: user }).lean();
       return placemark;
     }
     return null;
@@ -16,9 +16,18 @@ export const placemarkMongoStore = {
 
   async addPlacemark(placemark) {
     const newPlacemark = new Placemark(placemark);
-    const placemarkObj = await newPlacemark.save();
-    const p = await this.getPlacemarkById(placemarkObj._id);
-    return p;
+    let placemarkObj = null;
+
+    for (let i = 0; i < 5; i += 1) {
+      placemarkObj = await newPlacemark.save();
+      if (newPlacemark) {
+        break;
+      }
+    }
+    console.log("we get into the addPlacemark");
+    console.log(placemarkObj._id);
+    const temp = await this.getPlacemarkById(placemarkObj._id, placemarkObj.user);
+    return temp;
   },
 
   async deletePlacemarkById(id) {
@@ -140,11 +149,14 @@ export const placemarkMongoStore = {
     return { categories, countCategories };
   },
 
-  async updatePlacemark(newPlacemark) {
-    const poi = await Placemark.findOne({ _id: newPlacemark._id });
-    poi.title = newPlacemark.title;
-    poi.img = newPlacemark.img;
+  async updatePlacemark(id, newPlacemark) {
+    const poi = await Placemark.findOne({ _id: id });
+
+    Object.assign(poi, newPlacemark);
     await poi.save();
+
+    const temp = await this.getPlacemarkById(id);
+    return temp;
   },
 
   async getPlacemarkByName(name) {
@@ -152,9 +164,8 @@ export const placemarkMongoStore = {
       const placemark = await Placemark.findOne({ name: name });
       if (placemark.location !== undefined) {
         return true;
-      } else {
-        return false;
       }
+      return false;
     } catch (error) {
       return false;
     }
