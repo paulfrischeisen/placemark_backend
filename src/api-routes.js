@@ -9,19 +9,11 @@ export const apiRoutes = [
   { method: "POST", path: "/api/users/authenticate", config: userApi.authenticate },
 
   { method: "GET", path: "/api/placemarks", config: placemarksApi.findAll },
-  { method: "GET", path: "/api/placemarks/{id}", config: placemarksApi.findByContributor },
-  { method: "POST", path: "/api/placemarks", config: placemarksApi.createPlacemark },
+  { method: "GET", path: "/api/placemarks/{id}", config: placemarksApi.findOne },
+  { method: "POST", path: "/api/placemarks", config: placemarksApi.create },
+  { method: "DELETE", path: "/api/placemarks/{id}", config: placemarksApi.deleteOne },
   { method: "DELETE", path: "/api/placemarks", config: placemarksApi.deleteAll },
-  { method: "PUT", path: "/api/placemarks/{id}", config: placemarksApi.updatePlacemark },
-  /*
-  { method: "POST", path: "/api/placemarks", config: placemarksApi.addRating },
-  { method: "POST", path: "/api/placemarks", config: placemarksApi.addComment },
-  { method: "POST", path: "/api/placemarks", config: placemarksApi.addImage },
-  { method: "GET", path: "/api/placemarks", config: placemarksApi.getRatingStats },
-  { method: "GET", path: "/api/placemarks", config: placemarksApi.getPlacemarkUserStats },
-  { method: "GET", path: "/api/placemarks", config: placemarksApi.getPlacemarkCategoryStats },
-  { method: "DELETE", path: "/api/placemarks/{id}", config: placemarksApi.deletePlacemark },
-  { method: "GET", path: "/api/placemarks/{category}", config: placemarksApi.findByCategory },
-
-     */
+  { method: "PUT", path: "/api/placemarks/{id}", config: placemarksApi.update },
+  { method: "POST", path: "/api/placemarks/{id}/addImage", config: placemarksApi.addImage },
+  { method: "DELETE", path: "/api/placemarks/{id}/deleteImage", config: placemarksApi.deleteImage },
 ];

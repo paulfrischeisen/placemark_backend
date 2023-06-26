@@ -38,33 +38,28 @@ export const placemarkService = {
     axios.defaults.headers.common.Authorization = "";
   },
 
-  async createPlacemark(createdPlacemark) {
-    const response = await axios.post(`${this.placemarkUrl}/api/placemarks`, createdPlacemark);
-    return response.data;
-  },
-
-  async getPlacemarkById(id) {
-    const response = await axios.get(`${this.placemarkUrl}/api/placemarks/${id}`);
-    return response.data;
-  },
-
   async getAllPlacemarks() {
     const response = await axios.get(`${this.placemarkUrl}/api/placemarks`);
     return response.data;
   },
 
-  async deletePlacemarkById(id) {
+  async getOnePlacemark(id) {
+    const response = await axios.get(`${this.placemarkUrl}/api/placemarks/${id}`);
+    return response.data;
+  },
+
+  async createPlacemark(createdPlacemark) {
+    const response = await axios.post(`${this.placemarkUrl}/api/placemarks`, createdPlacemark);
+    return response.data;
+  },
+
+  async deleteOnePlacemark(id) {
     const response = await axios.delete(`${this.placemarkUrl}/api/placemarks/${id}`);
     return response.data;
   },
 
   async deleteAllPlacemarks() {
     const response = await axios.delete(`${this.placemarkUrl}/api/placemarks`);
-    return response.data;
-  },
-
-  async callApi() {
-    const response = await axios.get(`${this.placemarkUrl}/api/apitest`);
     return response.data;
   },
 };

@@ -6,7 +6,7 @@ export const placemarkMongoStore = {
     return placemarks;
   },
 
-  async getPlacemarkById(id, user) {
+  async getOnePlacemark(id, user) {
     if (id) {
       const placemark = await Placemark.findOne({ _id: id, user: user }).lean();
       return placemark;
@@ -19,6 +19,7 @@ export const placemarkMongoStore = {
     let placemarkObj = null;
 
     for (let i = 0; i < 5; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
       placemarkObj = await newPlacemark.save();
       if (newPlacemark) {
         break;
@@ -26,11 +27,11 @@ export const placemarkMongoStore = {
     }
     console.log("we get into the addPlacemark");
     console.log(placemarkObj._id);
-    const temp = await this.getPlacemarkById(placemarkObj._id, placemarkObj.user);
+    const temp = await this.getOnePlacemark(placemarkObj._id, placemarkObj.user);
     return temp;
   },
 
-  async deletePlacemarkById(id) {
+  async deleteOnePlacemark(id) {
     try {
       await Placemark.deleteOne({ _id: id });
     } catch (error) {
@@ -38,102 +39,20 @@ export const placemarkMongoStore = {
     }
   },
 
-  async deleteAllPlacemarks() {
-    await Placemark.deleteMany({});
+  async deleteAllPlacemarks(user) {
+    await Placemark.deleteMany({ user: user });
   },
 
-  async addImageById(id, img) {
+  async addImage(id, imgURL, user) {
     const placemark = await Placemark.findOne({ _id: id });
     if (!placemark) {
       return "error";
     }
-    if (placemark.photos.length > 2) {
-      placemark.photos[0] = img;
-    } else {
-      placemark.photos.push(img);
-    }
+    placemark.images.push(imgURL);
     await placemark.save();
-    return placemark;
-  },
 
-  async updateRatingById(id, rating) {
-    const poi = await Placemark.findOne({ _id: id });
-    if (!poi) {
-      return "error";
-    }
-    if (poi.stats.avgRating == null) {
-      poi.stats.avgRating = rating;
-      poi.stats.numRatings = 1;
-    }
-    // if there is already a rating given to the POI
-    else {
-      const newAvg = (poi.stats.avgRating * poi.stats.numRatings + rating) / (poi.stats.numRatings + 1);
-      poi.stats.avgRating = newAvg;
-      poi.stats.numRatings += 1;
-    }
-    await poi.save();
-    const tmp = await this.getPlacemarkById(poi._id);
-    return tmp;
-  },
-
-  async addCommentById(id, username, comment) {
-    const newComment = {
-      username: username,
-      comment: comment,
-      date: new Date(),
-    };
-
-    const poi = await Placemark.findOne({ _id: id });
-    if (!poi) {
-      return "error";
-    }
-    poi.comments.push(newComment);
-    await poi.save();
-    const tmp = await this.getPlacemarkById(poi._id);
-    return tmp;
-  },
-
-  async getPlacemarkUserStats() {
-    const countUsers = await Placemark.aggregate([
-      {
-        $group: {
-          _id: "$createdByUser",
-          count: { $sum: 1 },
-        },
-      },
-    ]);
-    return countUsers;
-  },
-
-  async getPlacemarkRatingStats() {
-    const countRating = await Placemark.aggregate([
-      {
-        $group: {
-          _id: "$stats.avgRating",
-          count: { $sum: 1 },
-        },
-      },
-    ]);
-    const counter = [0, 0, 0, 0, 0, 0];
-    countRating.forEach((element) => {
-      if (element._id === 5) {
-        counter[5] += 1;
-      } else if (element._id >= 4) {
-        counter[4] += 1;
-      } else if (element._id >= 3) {
-        counter[3] += 1;
-      } else if (element._id >= 2) {
-        counter[2] += 1;
-      } else if (element._id >= 1) {
-        counter[1] += 1;
-      } else if (element._id > 0) {
-        counter[0] += 1;
-      }
-    });
-    return {
-      labels: ["0", "1", "2", "3", "4", "5"],
-      data: counter,
-    };
+    const poi = await this.getOnePlacemark(id, user);
+    return poi;
   },
 
   async getCategories() {
@@ -149,34 +68,36 @@ export const placemarkMongoStore = {
     return { categories, countCategories };
   },
 
-  async updatePlacemark(id, newPlacemark) {
-    const poi = await Placemark.findOne({ _id: id });
+  async updatePlacemark(id, newPlacemark, user) {
+    const placemark = await Placemark.findOne({ _id: id, user: user });
 
-    Object.assign(poi, newPlacemark);
-    await poi.save();
+    if (!placemark) {
+      return null;
+    }
 
-    const temp = await this.getPlacemarkById(id);
+    Object.assign(placemark, newPlacemark);
+    await placemark.save();
+
+    const temp = await this.getOnePlacemark(id, user);
     return temp;
   },
 
-  async getPlacemarkByName(name) {
-    try {
-      const placemark = await Placemark.findOne({ name: name });
-      if (placemark.location !== undefined) {
-        return true;
-      }
-      return false;
-    } catch (error) {
-      return false;
+  async deleteImage(id, imgURL) {
+    const placemark = await Placemark.findOne({ id: id });
+    if (!placemark) {
+      return null;
     }
+    const numImg = placemark.images.indexOf(imgURL);
+    if (index > -1) {
+      placemark.images.splice(index, 1);
+      await placemark.save();
+    }
+
+    const temp = await this.getOnePlacemark(id, placemark.user);
+    return temp;
   },
 
-  async addPhoto(placemark, photo) {
-    const newPhoto = placemark.photos.push(photo);
-    return newPhoto;
-  },
-
-  async findPlacemarksByCategory(category) {
+  async getPlacemarksByCategory(category) {
     const placemarks = await Placemark.find({ _Category: category }).lean();
     return placemarks;
   },

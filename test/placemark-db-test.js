@@ -17,7 +17,7 @@ suite("Placemark Model tests", () => {
 
   test("get placemark by id", async () => {
     await db.placemarkStore.addPlacemark(Frankenjura);
-    const returnedPlacemark = await db.placemarkStore.getPlacemarkById(Frankenjura._id);
+    const returnedPlacemark = await db.placemarkStore.getOnePlacemark(Frankenjura._id);
     assertSubset(Frankenjura, returnedPlacemark);
   });
 
@@ -29,8 +29,8 @@ suite("Placemark Model tests", () => {
 
   test("delete a placemark", async () => {
     await db.placemarkStore.addPlacemark(Frankenjura);
-    await db.placemarkStore.deletePlacemarkById(Frankenjura._id);
-    const returnedPlacemark = await db.placemarkStore.getPlacemarkById(Frankenjura._id);
+    await db.placemarkStore.deleteOnePlacemark(Frankenjura._id);
+    const returnedPlacemark = await db.placemarkStore.getOnePlacemark(Frankenjura._id);
     assert.isNull(returnedPlacemark);
   });
 

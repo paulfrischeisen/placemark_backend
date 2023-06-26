@@ -32,23 +32,20 @@ suite("Placemark API tests", () => {
     assert.equal(returnedPlacemarks.length, testPlacemarks.length + 1);
     await placemarkService.deleteAllPlacemarks();
     await placemarkService.createPlacemark(Frankenjura);
-    await placemarkService.authenticate(maggieCredentials);
     returnedPlacemarks = await placemarkService.getAllPlacemarks();
     assert.equal(returnedPlacemarks.length, 1);
   });
 
   test("get a placemark", async () => {
-    const returnedPlacemark = await placemarkService.getPlacemarkById(placemarks[0]._id);
+    const returnedPlacemark = await placemarkService.getOnePlacemark(placemarks[0]._id);
     assert.deepEqual(placemarks[0], returnedPlacemark);
   });
 
   test("get a placemark - bad id", async () => {
     try {
-      const returnedPlacemark = await placemarkService.getPlacemarkById("1");
+      const returnedPlacemark = await placemarkService.getOnePlacemark("1");
       assert.fail("Should not return a response");
     } catch (error) {
-      console.log(error.response.data);
-      console.log(error.response.status);
       assert(error.response.data.message === "No Placemark with this id");
       assert.equal(error.response.data.statusCode, 503);
     }
@@ -58,7 +55,7 @@ suite("Placemark API tests", () => {
     await placemarkService.deleteAllPlacemarks();
     await placemarkService.createPlacemark(Frankenjura);
     try {
-      const returnedPlacemark = await placemarkService.getPlacemarkById(placemarks[0]._id);
+      const returnedPlacemark = await placemarkService.getOnePlacemark(placemarks[0]._id);
       assert.fail("Should not return a response");
     } catch (error) {
       console.log(error.response.data);
