@@ -12,6 +12,7 @@ export const userApi = {
     handler: async function (request, h) {
       try {
         const users = await db.userStore.getAllUsers();
+        console.log(`in backend. users-api the return of user-mongo-store, allUsers is: ${users[0].firstName} last name: ${users[0].lastName}`);
         return users;
       } catch (err) {
         return Boom.serverUnavailable("Database Error");

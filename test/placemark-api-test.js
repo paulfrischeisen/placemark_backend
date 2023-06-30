@@ -11,9 +11,13 @@ suite("Placemark API tests", () => {
     await placemarkService.createUser(maggie);
     await placemarkService.authenticate(maggieCredentials);
     await placemarkService.deleteAllPlacemarks();
+    console.log("if we get here normally we should delete all placemarks before tests!");
+    const allPlacemarksTest = await placemarkService.getAllPlacemarks();
+    console.log(allPlacemarksTest.data);
     for (let i = 0; i < testPlacemarks.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
       placemarks[i] = await placemarkService.createPlacemark(testPlacemarks[i]);
+      console.log(`in the for loop we create Placemarks - test placemarks ${i} and the placemark is: ${placemarks[i]}`);
     }
 
     await placemarkService.createPlacemark(Frankenjura);
@@ -29,6 +33,7 @@ suite("Placemark API tests", () => {
 
   test("delete all placemarks", async () => {
     let returnedPlacemarks = await placemarkService.getAllPlacemarks();
+    console.log(`the length after get all placemarks should be the 3 test marks ${returnedPlacemarks.length}`);
     assert.equal(returnedPlacemarks.length, testPlacemarks.length + 1);
     await placemarkService.deleteAllPlacemarks();
     await placemarkService.createPlacemark(Frankenjura);
@@ -43,7 +48,7 @@ suite("Placemark API tests", () => {
 
   test("get a placemark - bad id", async () => {
     try {
-      const returnedPlacemark = await placemarkService.getOnePlacemark("1");
+      const returnedPlacemark = await placemarkService.getOnePlacemark("649f145cf4a913cc98b64aa5");
       assert.fail("Should not return a response");
     } catch (error) {
       assert(error.response.data.message === "No Placemark with this id");

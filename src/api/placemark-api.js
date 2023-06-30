@@ -96,11 +96,13 @@ export const placemarksApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
+      console.log("deleteAll placemarks");
       try {
-        await db.placemarkStore.deleteAllPlacemarks(request.auth.credentials);
+        const user = request.auth.credentials;
+        await db.placemarkStore.deleteAllPlacemarks(user);
         return h.response().code(204);
       } catch (err) {
-        return Boom.serverUnavailable("Error");
+        return Boom.serverUnavailable("Database Error");
       }
     },
     tags: ["api"],

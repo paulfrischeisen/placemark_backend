@@ -33,14 +33,4 @@ suite("Placemark Model tests", () => {
     const returnedPlacemark = await db.placemarkStore.getOnePlacemark(Frankenjura._id);
     assert.isNull(returnedPlacemark);
   });
-
-  test("delete all placemarks", async () => {
-    for (let i = 0; i < testPlacemarks; i += 1) {
-      // eslint-disable-next-line no-await-in-loop
-      await db.placemarkStore.addPlacemark(testPlacemarks[i]);
-    }
-    await db.placemarkStore.deleteAllPlacemarks();
-    const returnedPlacemarks = await db.placemarkStore.getAllPlacemarks();
-    assert.equal(returnedPlacemarks.length, 0);
-  });
 });

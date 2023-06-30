@@ -88,8 +88,8 @@ export const placemarkMongoStore = {
       return null;
     }
     const numImg = placemark.images.indexOf(imgURL);
-    if (index > -1) {
-      placemark.images.splice(index, 1);
+    if (numImg > -1) {
+      placemark.images.splice(numImg, 1);
       await placemark.save();
     }
 
