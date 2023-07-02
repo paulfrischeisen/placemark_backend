@@ -77,4 +77,4 @@ process.on("unhandledRejection", (err) => {
   process.exit(1);
 });
 
-init();
+await init();

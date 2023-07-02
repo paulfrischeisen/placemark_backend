@@ -1,8 +1,8 @@
 import { Placemark } from "./placemark.js";
 
 export const placemarkMongoStore = {
-  async getAllPlacemarks() {
-    const placemarks = await Placemark.find().lean();
+  async getAllPlacemarks(user) {
+    const placemarks = await Placemark.find({ user: user }).lean();
     return placemarks;
   },
 
