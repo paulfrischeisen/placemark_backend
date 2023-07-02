@@ -2,9 +2,12 @@
   "name": "placemark_backend",
   "version": "0.1.0",
   "description": "Web application to track climbing spots around Regensburg",
-  "main": "index.js",
+  "main": "src/server.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server.js",
+    "lint": "./node_modules/.bin/eslint . --ext .js",
+    "test": "mocha --ui tdd test/**.js -exit"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +18,25 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "prettier": "^2.8.8"
+  },
+  "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "@hapi/cookie": "^12.0.1",
+    "@hapi/hapi": "^21.3.2",
+    "@hapi/inert": "^7.1.0",
+    "@hapi/vision": "^7.0.2",
+    "axios": "^1.4.0",
+    "chai": "^4.3.7",
+    "cloudinary": "^1.37.3",
+    "dotenv": "^16.3.0",
+    "handlebars": "^4.7.7",
+    "hapi-auth-jwt2": "^10.4.0",
+    "hapi-swagger": "^17.0.0",
+    "joi": "^17.9.2",
+    "jsonwebtoken": "^9.0.0",
+    "mais-mongoose-seeder": "^1.0.7",
+    "mocha": "^10.2.0",
+    "mongoose": "^7.3.1",
+    "mongoose-data-seed": "^2.1.6"
   }
 }
